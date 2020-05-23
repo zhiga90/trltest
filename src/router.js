@@ -20,8 +20,22 @@ const routes = [
     }
   },
   {
+    path: '/notes/add',
+    name: 'note-add',
+    component: () => import('./views/note.vue'),
+    meta: {
+      title: 'Новая заметка',
+      metaTags: [
+        {
+          name: 'description',
+          content: 'Создание вашей заметки со списком задач'
+        }
+      ]
+    }
+  },
+  {
     path: '/notes/:id',
-    name: 'note',
+    name: 'note-edit',
     component: () => import('./views/note.vue'),
     meta: {
       title: 'Заметка',

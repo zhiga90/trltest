@@ -12,6 +12,9 @@ export default {
   },
   computed: {
     ...mapGetters(['layout'])
+  },
+  mounted () {
+    this.$store.dispatch('getNotes')
   }
 }
 </script>

@@ -3,7 +3,7 @@
   h1.notes-head
     .notes-head-line
     .notes-head-text Список #[b Заметок]
-  .notes-add
+  .notes-add(@click="$router.push('/notes/add')")
     button.notes-add-button
       .icon
         plus
@@ -12,66 +12,49 @@
     :list.sync="notes"
     @swaped="swaped"
     @clicked="clicked"
+    @trash="trash"
   )
+  modal(v-if="isOpenEditModal")
+    template(v-slot:header)
+      span Удалить {{activeNote.head}}?
+    template(v-slot:buttons)
+      .button(@click="isOpenEditModal = false") Отмена
+      .button(@click="deleteNote") Удалить
 </template>
 
 <script>
 import notesList from '@/components/notes-list'
 import plus from '@/assets/icons/plus.svg?inline'
+import modal from '@/components/modal'
 
 export default {
   name: 'notes',
   components: {
     plus,
-    notesList
+    notesList,
+    modal
   },
   data: () => ({
-    notes: [
-      {
-        id: 1,
-        head: 'Lorem ipsum dolor sit amet',
-        color: 'blue1',
-        todos: [
-          { check: false, text: 'Lorem ipsum dolor sit amet' },
-          { check: true, text: 'Lorem ipsum dolor sit amet' },
-          { check: false, text: 'Lorem ipsum dolor sit amet' }
-        ]
-      },
-      { id: 2, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
-      { id: 3, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
-      { id: 4, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
-      { id: 5, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
-      {
-        id: 6,
-        head: 'Lorem ipsum dolor sit amet',
-        color: 'yellow',
-        todos: [
-          { check: true, text: 'Lorem ipsum dolor sit amet' },
-          { check: true, text: 'Lorem ipsum dolor sit amet' },
-          { check: false, text: 'Lorem ipsum dolor sit amet' }
-        ]
-      },
-      {
-        id: 7,
-        head: 'Lorem ipsum dolor sit amet',
-        color: 'asphalt',
-        todos: [
-          { check: true, text: 'Lorem ipsum dolor sit amet' },
-          { check: true, text: 'Lorem ipsum dolor sit amet' },
-          { check: false, text: 'Lorem ipsum dolor sit amet' },
-          { check: false, text: 'Lorem ipsum dolor sit amet' },
-          { check: false, text: 'Lorem ipsum dolor sit amet' },
-          { check: false, text: 'Lorem ipsum dolor sit amet' }
-        ]
-      }
-    ]
+    activeNote: null,
+    isOpenEditModal: false
   }),
+  computed: {
+    notes () { return this.$store.getters.notes }
+  },
   methods: {
     clicked (index) {
       this.$router.push('/notes/' + this.notes[index].id)
     },
     swaped (arr) {
-      this.notes = arr
+      this.$store.dispatch('setNotes', arr)
+    },
+    trash (el) {
+      this.isOpenEditModal = true
+      this.activeNote = el
+    },
+    deleteNote () {
+      this.$store.dispatch('deleteNoteById', this.activeNote.id)
+      this.isOpenEditModal = false
     }
   }
 }

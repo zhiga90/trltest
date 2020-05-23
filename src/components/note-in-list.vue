@@ -2,7 +2,10 @@
 .note(
   :class="[color]"
 )
-  .note-head {{head}}
+  .note-head
+    .note-head-text {{head}}
+    .note-head-button.icon(@click.stop="$emit('trash')")
+      delete-icon
   .note-line(v-if="todos.length")
   .todos(v-if="todos.length")
     .todo(
@@ -15,8 +18,11 @@
 </template>
 
 <script>
+import deleteIcon from '@/assets/icons/delete.svg?inline'
+
 export default {
   name: 'note',
+  components: { deleteIcon },
   props: {
     id: Number,
     head: String,
@@ -32,11 +38,11 @@ export default {
 
 <style lang="sass" scoped>
 .note
-  padding: 20px
   color: white
   border-radius: 10px
   background: $black1
   min-height: 100%
+  cursor: pointer
   &.blue1
     background: $blue1
   &.blue2
@@ -48,17 +54,35 @@ export default {
   &.asphalt
     background: $asphalt
   &-head
-    width: 100%
-    height: 22px
-    line-height: 22px
-    font-size: 18px
-    overflow: hidden
-    white-space: nowrap
-    text-overflow: ellipsis
+    position: relative
+    &-text
+      padding: 0 72px 0 20px
+      height: 62px
+      line-height: 62px
+      font-size: 18px
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+    &-button
+      position: absolute
+      right: 0
+      top: 0
+      width: 62px
+      height: 62px
+      border-radius: 10px
+      &:hover
+        background: rgba($white1, 8%)
+      &:active
+        background: rgba($white1, 15%)
+      > svg
+        fill: $white1
+        width: 22px
+        height: 16px
+
   &-line
     height: 1px
     background: $white1
-    margin: 20px -20px 20px 0
+    margin: 20px 0 20px 20px
     opacity: 33%
   .todos
     .todo
