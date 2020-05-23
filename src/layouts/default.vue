@@ -9,7 +9,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 html,
 body
   height: 100%

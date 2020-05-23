@@ -30,7 +30,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .note
   padding: 20px
   color: white

@@ -77,7 +77,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .notes
   padding-top: 60px
   padding-bottom: 60px
