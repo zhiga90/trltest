@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 const routes = [
   { path: '/', name: 'home', redirect: 'notes' },
   { path: '/notes', name: 'notes', component: () => import('./views/notes.vue') },
-  { path: '/note', name: 'note', component: () => import('./views/note.vue') }
+  { path: '/notes/:id', name: 'note', component: () => import('./views/note.vue') }
 ]
 
 const router = new VueRouter({

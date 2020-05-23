@@ -1,16 +1,24 @@
 <template lang="pug">
-.notes-list
-  .cell(v-for="el in list" :key="list.id")
-    note(v-bind="el")
+draggable(v-model="notes")
+  transition-group.notes-list
+    .cell(v-for="(el, index) in notes" :key="el.id" @click="$emit('clicked', index)")
+      note(v-bind="el")
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import note from '@/components/note-in-list'
 export default {
   name: 'notes',
-  components: { note },
+  components: { draggable, note },
   props: {
     list: { type: Array, default: () => ([]) }
+  },
+  computed: {
+    notes: {
+      get () { return this.list },
+      set (arr) { this.$emit('swaped', arr) }
+    }
   }
 }
 </script>

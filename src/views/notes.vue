@@ -8,7 +8,11 @@
       .icon
         plus
     .notes-add-text Добавить
-  notes-list(:list="notes")
+  notes-list(
+    :list.sync="notes"
+    @swaped="swaped"
+    @clicked="clicked"
+  )
 </template>
 
 <script>
@@ -21,47 +25,53 @@ export default {
     plus,
     notesList
   },
-  computed: {
-    notes () {
-      return [
-        {
-          id: 1,
-          head: 'Lorem ipsum dolor sit amet',
-          color: 'blue1',
-          todos: [
-            { check: false, text: 'Lorem ipsum dolor sit amet' },
-            { check: true, text: 'Lorem ipsum dolor sit amet' },
-            { check: false, text: 'Lorem ipsum dolor sit amet' }
-          ]
-        },
-        { id: 2, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
-        { id: 3, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
-        { id: 4, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
-        { id: 5, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
-        {
-          id: 6,
-          head: 'Lorem ipsum dolor sit amet',
-          color: 'yellow',
-          todos: [
-            { check: true, text: 'Lorem ipsum dolor sit amet' },
-            { check: true, text: 'Lorem ipsum dolor sit amet' },
-            { check: false, text: 'Lorem ipsum dolor sit amet' }
-          ]
-        },
-        {
-          id: 7,
-          head: 'Lorem ipsum dolor sit amet',
-          color: 'asphalt',
-          todos: [
-            { check: true, text: 'Lorem ipsum dolor sit amet' },
-            { check: true, text: 'Lorem ipsum dolor sit amet' },
-            { check: false, text: 'Lorem ipsum dolor sit amet' },
-            { check: false, text: 'Lorem ipsum dolor sit amet' },
-            { check: false, text: 'Lorem ipsum dolor sit amet' },
-            { check: false, text: 'Lorem ipsum dolor sit amet' }
-          ]
-        }
-      ]
+  data: () => ({
+    notes: [
+      {
+        id: 1,
+        head: 'Lorem ipsum dolor sit amet',
+        color: 'blue1',
+        todos: [
+          { check: false, text: 'Lorem ipsum dolor sit amet' },
+          { check: true, text: 'Lorem ipsum dolor sit amet' },
+          { check: false, text: 'Lorem ipsum dolor sit amet' }
+        ]
+      },
+      { id: 2, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
+      { id: 3, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
+      { id: 4, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
+      { id: 5, head: 'Lorem ipsum dolor sit amet', color: 'red', todos: [] },
+      {
+        id: 6,
+        head: 'Lorem ipsum dolor sit amet',
+        color: 'yellow',
+        todos: [
+          { check: true, text: 'Lorem ipsum dolor sit amet' },
+          { check: true, text: 'Lorem ipsum dolor sit amet' },
+          { check: false, text: 'Lorem ipsum dolor sit amet' }
+        ]
+      },
+      {
+        id: 7,
+        head: 'Lorem ipsum dolor sit amet',
+        color: 'asphalt',
+        todos: [
+          { check: true, text: 'Lorem ipsum dolor sit amet' },
+          { check: true, text: 'Lorem ipsum dolor sit amet' },
+          { check: false, text: 'Lorem ipsum dolor sit amet' },
+          { check: false, text: 'Lorem ipsum dolor sit amet' },
+          { check: false, text: 'Lorem ipsum dolor sit amet' },
+          { check: false, text: 'Lorem ipsum dolor sit amet' }
+        ]
+      }
+    ]
+  }),
+  methods: {
+    clicked (index) {
+      this.$router.push('/notes/' + this.notes[index].id)
+    },
+    swaped (arr) {
+      this.notes = arr
     }
   }
 }
