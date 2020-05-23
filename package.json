@@ -9,9 +9,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
+    "destyle.css": "^1.0.11",
     "luxon": "^1.24.1",
-    "pug": "^2.0.4",
-    "pug-plain-loader": "^1.0.0",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
@@ -32,8 +31,11 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
+    "pug": "^2.0.4",
+    "pug-plain-loader": "^1.0.0",
     "sass": "^1.26.3",
     "sass-loader": "^8.0.2",
+    "vue-cli-plugin-svg": "~0.1.3",
     "vue-template-compiler": "^2.6.11"
   }
 }
