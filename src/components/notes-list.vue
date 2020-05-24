@@ -6,7 +6,7 @@ draggable(v-model="notes")
       :key="el.id"
       @click="$emit('clicked', index)"
     )
-      note(v-bind="el", @trash="$emit('trash', el)")
+      note(v-bind="el", @remove="$emit('remove', el)")
 </template>
 
 <script>

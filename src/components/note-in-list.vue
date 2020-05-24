@@ -4,8 +4,8 @@
 )
   .note-head
     .note-head-text {{head}}
-    .note-head-button.icon(@click.stop="$emit('trash')")
-      delete-icon
+    .note-head-button.icon(@click.stop="$emit('remove')")
+      remove
   .note-line(v-if="todos.length")
   .todos(v-if="todos.length")
     .todo(
@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import deleteIcon from '@/assets/icons/delete.svg?inline'
+import remove from '@/assets/icons/remove.svg?inline'
 
 export default {
   name: 'note',
-  components: { deleteIcon },
+  components: { remove },
   props: {
     id: Number,
     head: String,
