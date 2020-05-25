@@ -1,12 +1,15 @@
 <template lang="pug">
-draggable(v-model="notes")
-  transition-group.notes-list
-    .cell(
-      v-for="(el, index) in notes"
-      :key="el.id"
-      @click="$emit('clicked', index)"
-    )
-      note(v-bind="el", @remove="$emit('remove', el)")
+draggable(
+  v-model="notes"
+  class="notes-list"
+  animation="200"
+)
+  .cell(
+    v-for="(el, index) in notes"
+    :key="el.id"
+    @click="$emit('clicked', index)"
+  )
+    note(v-bind="el", @remove="$emit('remove', el)")
 </template>
 
 <script>
@@ -35,7 +38,4 @@ export default {
 .cell
   width: 33%
   padding: 10px
-  transition: all .5s
-  &-move
-    transition: transform .5s
 </style>

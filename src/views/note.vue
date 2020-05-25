@@ -11,7 +11,7 @@
       .note-btn-label {{btn.label}}
 
   .note-head
-    .note-label Заголовок
+    .note-label Заголовок:
     input.note-head-input(v-if="isAdd", v-model="head", placeholder="Добавить заголовок")
     .note-head-edit(v-else-if="headEdit")
       .note-head-btn(@click="saveHead")
@@ -24,8 +24,12 @@
         edit
       .note-head-info-text {{head}}
 
-  .note-todos
-    .note-label Задачи
+  .note-label Задачи:
+  draggable(
+    v-model="todos"
+    class="note-todos"
+    animation="200"
+  )
     .note-todo(
       v-for="(todo, index) in todos"
       :key="'todo' + index"
@@ -43,10 +47,10 @@
         input.note-todo-edit(v-model="todo.text" @blur="editTodo(index)" :id="'focus-that-' + index")
       .note-todo-info(v-else @click="todo.editMode = true") {{todo.text}}
 
-    form.note-todo-add(@submit.prevent="addTodo")
-      .note-todo-plus(@click="addTodo")
-        plus
-      input.note-todo-edit(v-model="newTodo" placeholder="Добавить задачу")
+  form.note-todo-add(@submit.prevent="addTodo")
+    .note-todo-plus(@click="addTodo")
+      plus
+    input.note-todo-edit(v-model="newTodo" placeholder="Добавить задачу")
 
   modal(v-if="isOpenNoteDeleteModal")
     template(v-slot:header)
@@ -69,6 +73,7 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import modal from '@/components/modal'
 import plus from '@/assets/icons/plus.svg?inline'
 import arrow from '@/assets/icons/arrow.svg?inline'
@@ -80,7 +85,7 @@ import check from '@/assets/icons/check.svg?inline'
 
 export default {
   name: 'note',
-  components: { modal, plus, arrow, save, remove, cancel, edit, check },
+  components: { draggable, modal, plus, arrow, save, remove, cancel, edit, check },
   data: () => ({
     is404: false,
     head: '',
@@ -193,7 +198,6 @@ export default {
       el.blur()
     },
     editTodo (index) {
-      console.log(index)
       const todo = this.todos[index]
       if (todo.text) {
         todo.editMode = false
@@ -277,8 +281,6 @@ export default {
     font-size: 16px
     font-weight: 200
     padding-bottom: 20px
-  &-todos
-    padding-bottom: 60px
   &-todo
     display: flex
     align-items: center
@@ -337,6 +339,7 @@ export default {
       display: flex
       align-items: center
       justify-content: center
+      padding-bottom: 60px
     &-plus
       margin-right: 12px
       width: 40px

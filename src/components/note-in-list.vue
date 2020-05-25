@@ -1,6 +1,6 @@
 <template lang="pug">
 .note(
-  :class="[color]"
+  :class="[color, topTodos.length ? 'long' : '']"
 )
   .note-head
     .note-head-text {{head}}
@@ -113,4 +113,8 @@ export default {
             display: none
           &-text
             text-decoration: line-through
+  &.long
+    .note-head
+      &-button
+        border-radius: 0 10px 0 0
 </style>
