@@ -38,4 +38,8 @@ export default {
 .cell
   width: 33%
   padding: 10px
+  @media (max-width: $to-md)
+    width: 50%
+  @media (max-width: $to-sm)
+    width: 100%
 </style>

@@ -278,9 +278,14 @@ export default {
 <style lang="sass" scoped>
 .note
   &-buttons
-    margin: 50px 0
+    position: sticky
+    top: 0
+    padding: 50px 0
     display: flex
     justify-content: space-around
+    @media (max-width: $to-sm)
+      padding: 20px 0
+      background: $white1
   &-btn
     .icon
       border: solid 1px $asphalt
@@ -293,6 +298,13 @@ export default {
         width: 12px
         height: 12px
         fill: $asphalt
+    &-label
+      font-weight: bold
+      color: $asphalt
+      font-size: 12px
+      margin-top: 12px
+      @media (max-width: $to-sm)
+        display: none
     &:hover
       .icon
         border-color: $blue1
@@ -310,13 +322,10 @@ export default {
             fill: $asphalt
         .note-btn-label
           color: $asphalt
-  &-btn-label
-    font-weight: bold
-    color: $asphalt
-    font-size: 12px
-    margin-top: 12px
   &-head
     padding-bottom: 40px
+    @media (max-width: $to-sm)
+      padding-bottom: 25px
     &-input
       width: 100%
       color: $black1
@@ -327,6 +336,9 @@ export default {
         border-color: lighten($blue2, 15%)
       &:focus
         border-color: $blue2
+      @media (max-width: $to-sm)
+        font-size: 16px
+        line-height: 26px
     &-btn
       width: 38px
       height: 38px
@@ -343,6 +355,13 @@ export default {
         width: 18px
         height: 18px
         fill: $black1
+      @media (max-width: $to-sm)
+        width: 23px
+        height: 23px
+        margin-right: 8px
+        svg
+          width: 14px
+          height: 14px
     &-edit
       display: flex
       align-items: center
@@ -357,6 +376,8 @@ export default {
     font-size: 16px
     font-weight: 200
     padding-bottom: 20px
+    @media (max-width: $to-sm)
+      padding-bottom: 15px
   &-todo
     display: flex
     align-items: center
@@ -399,6 +420,9 @@ export default {
       flex-grow: 1
       flex-shrink: 1
       word-break: break-word
+      @media (max-width: $to-sm)
+        line-height: 32px
+        font-size: 14px
     &-form
       flex-grow: 1
       flex-shrink: 1
@@ -407,6 +431,9 @@ export default {
       font-size: 18px
       height: 40px
       border-bottom: solid 1px $grey1
+      @media (max-width: $to-sm)
+        font-size: 14px
+        height: 32px
       &:hover
         border-color: lighten($blue2, 15%)
       &:focus

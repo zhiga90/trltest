@@ -6,18 +6,19 @@
       .icon
         plus
     .notes-add-text Добавить
-  notes-list(
-    :list.sync="notes"
-    @swaped="swaped"
-    @clicked="clicked"
-    @remove="remove"
-  )
-  modal(v-if="isOpenDeleteModal")
-    template(v-slot:header)
-      span Удалить {{activeNote.head}}?
-    template(v-slot:buttons)
-      .button(@click="isOpenDeleteModal = false") Отмена
-      .button(@click="deleteNote") Удалить
+  .notes-block
+    notes-list(
+      :list.sync="notes"
+      @swaped="swaped"
+      @clicked="clicked"
+      @remove="remove"
+    )
+    modal(v-if="isOpenDeleteModal")
+      template(v-slot:header)
+        span Удалить {{activeNote.head}}?
+      template(v-slot:buttons)
+        .button(@click="isOpenDeleteModal = false") Отмена
+        .button(@click="deleteNote") Удалить
 </template>
 
 <script>
@@ -65,6 +66,8 @@ export default {
     text-align: center
     font-size: 18px
     color: $yellow1
+    @media (max-width: $to-sm)
+      padding-top: 30px
   &-add
     margin: 50px auto
     display: inline-block
@@ -78,6 +81,8 @@ export default {
             fill: $red1
       .notes-add-text
         color: $red1
+    @media (max-width: $to-sm)
+      margin: 30px 0 auto
     &-button
       border: solid 1px $grey1
       height: 40px
@@ -93,4 +98,6 @@ export default {
       color: $grey1
       font-size: 12px
       margin-top: 12px
+  &-block
+    margin: 0 -20px
 </style>
