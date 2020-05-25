@@ -1,10 +1,12 @@
 <template lang="pug">
 .note
   .note-buttons
-    .note-btn(
+    button.note-btn(
       v-for="(btn, index) in buttons"
       :key="'btn' + index"
       @click="runMethod(btn.method)"
+      :class="[btn.isHidden ? 'disabled' : '']"
+      :disabled="btn.isHidden"
     )
       .icon(:style="btn.iconStyle")
           component(:is="btn.icon")
@@ -29,6 +31,7 @@
     v-model="todos"
     class="note-todos"
     animation="200"
+    @change="swapTodos"
   )
     .note-todo(
       v-for="(todo, index) in todos"
@@ -36,7 +39,7 @@
       :class="[todo.check ? 'checked' : '']"
     )
 
-      .note-todo-check(@click="todo.check = !todo.check ")
+      .note-todo-check(@click="checkTodo(index)")
         .circle
           .check
             check
@@ -79,13 +82,14 @@ import plus from '@/assets/icons/plus.svg?inline'
 import arrow from '@/assets/icons/arrow.svg?inline'
 import save from '@/assets/icons/save.svg?inline'
 import remove from '@/assets/icons/remove.svg?inline'
+import undo from '@/assets/icons/undo.svg?inline'
 import cancel from '@/assets/icons/cancel.svg?inline'
 import edit from '@/assets/icons/edit.svg?inline'
 import check from '@/assets/icons/check.svg?inline'
 
 export default {
   name: 'note',
-  components: { draggable, modal, plus, arrow, save, remove, cancel, edit, check },
+  components: { draggable, modal, plus, arrow, save, remove, undo, cancel, edit, check },
   data: () => ({
     is404: false,
     head: '',
@@ -96,19 +100,25 @@ export default {
     newTodo: '',
     addButtons: [
       { label: 'Назад', method: 'back', icon: 'arrow', iconStyle: 'transform: scale(-1, 1)' },
-      { label: 'Добавить', method: 'addNote', icon: 'plus' }
+      { label: 'Добавить', method: 'addNote', icon: 'plus' },
+      { label: 'Отменить', method: 'historyBack', icon: 'undo', isHidden: true },
+      { label: 'Повторить', method: 'historyForward', icon: 'undo', isHidden: true, iconStyle: 'transform: scale(-1, 1)' }
     ],
     editButtons: [
       { label: 'Назад', method: 'back', icon: 'arrow', iconStyle: 'transform: scale(-1, 1)' },
       { label: 'Cохранить', method: 'saveNote', icon: 'save' },
       { label: 'Отменить редактирование', method: 'openDropChangesModal', icon: 'cancel' },
-      { label: 'Удалить', method: 'openDeleteModal', icon: 'remove' }
+      { label: 'Удалить', method: 'openDeleteModal', icon: 'remove' },
+      { label: 'Отменить', method: 'historyBack', icon: 'undo', isHidden: true },
+      { label: 'Повторить', method: 'historyForward', icon: 'undo', isHidden: true, iconStyle: 'transform: scale(-1, 1)' }
     ],
     isOpenNoteDeleteModal: false,
     isOpenNoteDropChangesModal: false,
     isOpenMessageModal: '',
     message: '',
-    doubleSaveTrigger: false
+    doubleSaveTrigger: false,
+    history: [],
+    historyActiveIndex: 0
   }),
   computed: {
     isHeadValid () { return !!this.head },
@@ -117,7 +127,11 @@ export default {
     buttons () { return this.id ? this.editButtons : this.addButtons }
   },
   mounted () {
-    if (!this.isAdd && this.id) this.getNoteData()
+    if (!this.isAdd && this.id) {
+      this.getNoteData()
+    } else {
+      this.historyStep()
+    }
   },
   methods: {
     runMethod (method) { this[method]() },
@@ -139,6 +153,7 @@ export default {
         todo.editMode = false
       }
       this.todos = note.todos
+      this.historyStep()
     },
     editHead () {
       this.headVersion = this.head
@@ -150,6 +165,7 @@ export default {
     saveHead () {
       if (this.headVersion) this.head = this.headVersion
       this.headEdit = false
+      this.historyPush()
     },
     back () {
       this.$router.push('/notes')
@@ -160,6 +176,13 @@ export default {
     dropNoteChanges () {
       this.getNoteData()
       this.isOpenNoteDropChangesModal = false
+      this.dropChangesHistory()
+    },
+    dropChangesHistory () {
+      this.history = []
+      this.historyStep()
+      this.historyActiveIndex = 0
+      this.historyButtonsVisibility()
     },
     addNote () {
       if (this.head) {
@@ -190,7 +213,13 @@ export default {
       if (this.newTodo) {
         this.todos.push({ check: false, editMode: false, text: this.newTodo })
         this.newTodo = ''
+        this.historyPush()
       }
+    },
+    checkTodo (index) {
+      const todo = this.todos[index]
+      todo.check = !todo.check
+      this.historyPush()
     },
     submitTodo (index) {
       const el = document.getElementById('focus-that-' + index)
@@ -204,6 +233,43 @@ export default {
       } else {
         this.todos.splice(index, 1)
       }
+      this.historyPush()
+    },
+    swapTodos () {
+      this.historyPush()
+    },
+    historyStep () {
+      this.history.push({
+        head: this.head,
+        todos: JSON.parse(JSON.stringify(this.todos))
+      })
+    },
+    historyPush () {
+      if (this.historyActiveIndex !== this.history.length - 1) {
+        this.history.splice(this.historyActiveIndex + 1)
+      }
+      this.historyActiveIndex++
+      this.historyStep()
+      this.historyButtonsVisibility()
+    },
+    historyButtonsVisibility () {
+      for (const arrType of ['addButtons', 'editButtons']) {
+        this[arrType].find(x => x.label === 'Отменить').isHidden = this.historyActiveIndex === 0
+        this[arrType].find(x => x.label === 'Повторить').isHidden = this.historyActiveIndex >= this.history.length - 1
+      }
+    },
+    historyBack () {
+      this.historyActiveIndex--
+      this.historyMove('back')
+    },
+    historyForward () {
+      this.historyActiveIndex++
+      this.historyMove('forward')
+    },
+    historyMove () {
+      this.head = JSON.parse(JSON.stringify(this.history[this.historyActiveIndex].head))
+      this.todos = JSON.parse(JSON.stringify(this.history[this.historyActiveIndex].todos))
+      this.historyButtonsVisibility()
     }
   }
 }
@@ -229,11 +295,21 @@ export default {
         fill: $asphalt
     &:hover
       .icon
-        border: solid 1px $blue1
+        border-color: $blue1
         > svg
           fill: $blue1
       .note-btn-label
         color: $blue1
+    &.disabled
+      opacity: 50%
+      &:hover
+        .icon
+          cursor: auto
+          border-color: $asphalt
+          > svg
+            fill: $asphalt
+        .note-btn-label
+          color: $asphalt
   &-btn-label
     font-weight: bold
     color: $asphalt
