@@ -82,9 +82,9 @@ export default {
   &-line
     height: 1px
     background: $white1
-    margin: 20px 0 20px 20px
     opacity: 33%
   .todos
+    padding: 20px
     .todo
       position: relative
       margin-bottom: 10px
@@ -108,8 +108,9 @@ export default {
         text-overflow: ellipsis
         padding-left: 20px
       &.checked
-          &.todo-check
+        .todo
+          &-check
             display: none
-          &.todo-text
+          &-text
             text-decoration: line-through
 </style>
